@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using System.Text;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using TeamScheduleViewer.Models;
-using Newtonsoft.Json;
 
 namespace TeamScheduleViewer.Service
 {
@@ -25,7 +24,6 @@ namespace TeamScheduleViewer.Service
         {
             List<IPlan> plans = new List<IPlan>();
 
-            
             try
             {
                 Task<string> restask = _client.GetStringAsync(_ServicesEndpoint + "/service_types/" + _ServiceTypeID + "/plans");
@@ -34,7 +32,7 @@ namespace TeamScheduleViewer.Service
 
                 dynamic data = JsonConvert.DeserializeObject(res);
 
-                for(int i = 0; i < data.data.Count; i++)
+                for (int i = 0; i < data.data.Count; i++)
                 {
                     try
                     {
@@ -49,7 +47,7 @@ namespace TeamScheduleViewer.Service
 
                             dynamic membersdata = JsonConvert.DeserializeObject(res);
 
-                            for(int j = 0; j < membersdata.data.Count; j++)
+                            for (int j = 0; j < membersdata.data.Count; j++)
                             {
                                 try
                                 {
@@ -57,34 +55,30 @@ namespace TeamScheduleViewer.Service
                                         (string)membersdata.data[j].attributes.name,
                                         (string)membersdata.data[j].attributes.team_position_name));
                                 }
-                                catch(Exception e)
+                                catch (Exception e)
                                 {
                                     _logger.LogError("Member Parsing Failure: " + e.Message);
                                 }
                             }
-                        } 
-                        catch(Exception e)
+                        }
+                        catch (Exception e)
                         {
                             _logger.LogError("Person API Failure: " + e.Message);
                         }
 
                         plans.Add(plan);
-
-                    } 
-                    catch(Exception e)
+                    }
+                    catch (Exception e)
                     {
                         _logger.LogError("Plan Parsing Failure: " + e.Message);
                     }
-                    
                 }
-
-            } 
-            catch(Exception e)
+            }
+            catch (Exception e)
             {
-                _logger.LogError("Plan API Failure: "+e.Message);
+                _logger.LogError("Plan API Failure: " + e.Message);
                 return new IPlan[0];
             }
-
 
             return plans.ToArray();
         }
@@ -100,6 +94,5 @@ namespace TeamScheduleViewer.Service
 
             _logger = logger;
         }
-
     }
 }
