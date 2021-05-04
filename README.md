@@ -4,9 +4,6 @@ TeamScheduleViewer
 ==================
 
 A Planning Center Online schedule viewer for plans in a service group
-## Author
-
-[Cameron King](http://cameronking.me)
 
 ## Dev Deployment
 
@@ -29,6 +26,10 @@ From within this project directory, run:
     heroku config:set PCO_Secret="SAMPLEcb39772fd9d9141b554dc8df384286579e71078bdc150290e1e3106b01"
     heroku config:set PCO_ServiceTypeID="1130876"
     git push heroku master
+    
+## Author
+
+[Cameron King](http://cameronking.me)
 
 ## License
 
