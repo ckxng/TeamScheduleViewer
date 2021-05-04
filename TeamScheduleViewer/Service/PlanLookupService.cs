@@ -24,6 +24,8 @@ namespace TeamScheduleViewer.Service
         {
             List<IPlan> plans = new List<IPlan>();
 
+            string error = null;
+
             try
             {
                 Task<string> restask = _client.GetStringAsync(_ServicesEndpoint + "/service_types/" + _ServiceTypeID + "/plans");
@@ -58,12 +60,14 @@ namespace TeamScheduleViewer.Service
                                 catch (Exception e)
                                 {
                                     _logger.LogError("Member Parsing Failure: " + e.Message);
+                                    error = "Invalid data was recieved from the API";
                                 }
                             }
                         }
                         catch (Exception e)
                         {
                             _logger.LogError("Person API Failure: " + e.Message);
+                            error = "Unable to retrieve data from the API";
                         }
 
                         plans.Add(plan);
@@ -71,13 +75,19 @@ namespace TeamScheduleViewer.Service
                     catch (Exception e)
                     {
                         _logger.LogError("Plan Parsing Failure: " + e.Message);
+                        error = "Invalid data was recieved from the API";
                     }
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError("Plan API Failure: " + e.Message);
-                return new IPlan[0];
+                error = "Unable to retrieve data from the API";
+            }
+
+            if(error != null)
+            {
+                throw new Exception(error);
             }
 
             return plans.ToArray();

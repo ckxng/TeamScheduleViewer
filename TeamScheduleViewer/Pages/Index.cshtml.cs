@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace TeamScheduleViewer.Pages
 {
@@ -9,10 +10,19 @@ namespace TeamScheduleViewer.Pages
 
         public readonly Models.IPlan[] Plans;
 
+        public string Error = null;
+
         public IndexModel(ILogger<IndexModel> logger, Service.IPlanLookupService lookup)
         {
             _logger = logger;
-            Plans = lookup.PlansInServiceType();
+            try
+            {
+                Plans = lookup.PlansInServiceType();
+            }
+            catch (Exception e)
+            {
+                Error = e.Message;
+            }
         }
 
         public void OnGet()
