@@ -85,10 +85,10 @@ namespace TeamScheduleViewer.Service
 
         public PlanLookupService(IConfiguration config, ILogger<PlanLookupService> logger)
         {
-            _AppID = config.GetValue<string>("PCO_ApplicationID");
-            _Secret = config.GetValue<string>("PCO_Secret");
-            _ServicesEndpoint = config.GetValue<string>("PCO_ServicesEndpoint");
-            _ServiceTypeID = config.GetValue<string>("PCO_ServiceTypeID");
+            _AppID = Environment.GetEnvironmentVariable("PCO_ApplicationID") ?? config.GetValue<string>("PCO_ApplicationID");
+            _Secret = Environment.GetEnvironmentVariable("PCO_Secret") ?? config.GetValue<string>("PCO_Secret");
+            _ServicesEndpoint = Environment.GetEnvironmentVariable("PCO_ServicesEndpoint") ?? config.GetValue<string>("PCO_ServicesEndpoint");
+            _ServiceTypeID = Environment.GetEnvironmentVariable("PCO_ServiceTypeID") ?? config.GetValue<string>("PCO_ServiceTypeID");
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(_AppID + ":" + _Secret)));
 
